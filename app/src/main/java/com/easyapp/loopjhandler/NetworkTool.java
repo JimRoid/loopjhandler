@@ -129,7 +129,38 @@ public class NetworkTool {
         if (!route.startsWith("http"))
             route = baseUrl + route;
 
+
+        Logger("route: " + route);
         asyncHttpClient.post(context, route, stringEntity, content_type, DefaultHttpResponseHandler(responseHandler));
+    }
+
+    protected void DELETE(String route, ResponseHandler responseHandler) {
+        if (!isNetworkConnected(context)) {
+            responseHandler.NoNetwork();
+            showNetworkCheck();
+            return;
+        }
+
+        if (!route.startsWith("http"))
+            route = baseUrl + route;
+
+        Logger("route: " + route);
+        asyncHttpClient.delete(context, route, DefaultHttpResponseHandler(responseHandler));
+    }
+
+    protected void PUT(String route, RequestParams params, ResponseHandler responseHandler) {
+        if (!isNetworkConnected(context)) {
+            responseHandler.NoNetwork();
+            showNetworkCheck();
+            return;
+        }
+
+        if (!route.startsWith("http"))
+            route = baseUrl + route;
+
+        Logger("route: " + route);
+        Logger("params: " + params);
+        asyncHttpClient.put(context, route, params, DefaultHttpResponseHandler(responseHandler));
     }
 
     protected AsyncHttpResponseHandler DefaultHttpResponseHandler(final ResponseHandler responseHandler) {
