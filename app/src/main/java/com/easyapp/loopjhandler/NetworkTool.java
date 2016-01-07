@@ -30,7 +30,7 @@ public class NetworkTool {
     private AlertDialog alertDialog;
 
     static {
-        asyncHttpClient = new AsyncHttpClient();
+        asyncHttpClient = new AsyncHttpClient(new SSLController().getSchemeRegistry());
     }
 
 
