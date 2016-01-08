@@ -10,11 +10,14 @@ import android.net.NetworkInfo;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.MySSLSocketFactory;
 import com.loopj.android.http.RequestParams;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.security.KeyStore;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -30,18 +33,40 @@ public class NetworkTool {
     private AlertDialog alertDialog;
 
     static {
-        asyncHttpClient = new AsyncHttpClient(new SSLController().getSchemeRegistry());
+        asyncHttpClient = new AsyncHttpClient();
+        AsyncHttpClient.allowRetryExceptionClass(javax.net.ssl.SSLException.class);
     }
 
 
     public NetworkTool(Context context, String baseUrl) {
         this.context = context;
         this.baseUrl = baseUrl;
+        if (baseUrl.contains("https")) {
+            ssl_enable();
+        }
     }
 
     public NetworkTool(Activity context, String baseUrl) {
         this.context = context;
         this.baseUrl = baseUrl;
+
+        if (baseUrl.contains("https")) {
+            ssl_enable();
+        }
+    }
+
+    private void ssl_enable() {
+        try {
+            Logger.d("https");
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(null, null);
+            MySSLSocketFactory sf = new MySSLSocketFactory(trustStore);
+            sf.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+            asyncHttpClient.setSSLSocketFactory(sf);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setDialog(AlertDialog alertDialog) {
