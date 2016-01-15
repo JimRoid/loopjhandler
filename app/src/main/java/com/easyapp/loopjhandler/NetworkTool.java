@@ -4,6 +4,7 @@ package com.easyapp.loopjhandler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -287,4 +288,19 @@ public class NetworkTool {
         }
     }
 
+    public static void support_check_network_with_dialog(Activity activity, final Dialog_call_cancel dialog_call_cancel) {
+        if (!isNetworkConnected(activity)) {
+            new AlertDialog.Builder(activity).setTitle(R.string.hint_network_title).setMessage(R.string.hint_network_error).setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    dialog_call_cancel.onDismiss();
+                }
+            }).show();
+        }
+    }
+
+    public interface Dialog_call_cancel {
+        void onDismiss();
+    }
 }
