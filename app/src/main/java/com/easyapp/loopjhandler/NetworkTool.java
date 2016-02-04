@@ -213,6 +213,13 @@ public class NetworkTool {
 
     protected JsonHttpResponseHandler Default_jsonHttpResponseHandler(final ResponseHandler responseHandler) {
         return new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                responseHandler.Success(statusCode, response);
+            }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);

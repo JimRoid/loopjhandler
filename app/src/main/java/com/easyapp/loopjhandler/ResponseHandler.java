@@ -1,5 +1,6 @@
 package com.easyapp.loopjhandler;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -17,6 +18,13 @@ public class ResponseHandler implements JResponseHandler, AsyncResponseHandler {
     public void Success(int StatusCode, JSONObject response) {
 
     }
+
+    @Override
+    public void Success(int StatusCode, JSONArray response) {
+
+    }
+
+
 
     @Override
     public void Success(int statusCode, Header[] headers, byte[] responseBody) {
