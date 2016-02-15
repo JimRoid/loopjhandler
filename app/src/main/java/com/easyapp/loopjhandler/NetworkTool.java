@@ -134,7 +134,7 @@ public class NetworkTool {
 
         Logger("route: " + route);
         String content_type = "text/plain charset=utf-8";
-        asyncHttpClient.get(context, route, httpEntity, content_type, Default_jsonHttpResponseHandler(responseHandler));
+        asyncHttpClient.get(context, route, httpEntity, content_type, DefaultHttpResponseHandler(responseHandler));
     }
 
     protected void POST(String route, RequestParams params, ResponseHandler responseHandler) {
