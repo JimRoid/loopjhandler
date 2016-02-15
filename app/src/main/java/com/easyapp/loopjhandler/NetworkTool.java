@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.security.KeyStore;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
 /**
@@ -119,6 +120,21 @@ public class NetworkTool {
 
         Logger("route: " + route);
         asyncHttpClient.get(context, route, Default_jsonHttpResponseHandler(responseHandler));
+    }
+
+    protected void GET(String route, HttpEntity httpEntity, ResponseHandler responseHandler) {
+        if (!isNetworkConnected(context)) {
+            responseHandler.NoNetwork();
+            showNetworkCheck();
+            return;
+        }
+
+        if (!route.startsWith("http"))
+            route = baseUrl + route;
+
+        Logger("route: " + route);
+        String content_type = "text/plain charset=utf-8";
+        asyncHttpClient.get(context, route, httpEntity, content_type, Default_jsonHttpResponseHandler(responseHandler));
     }
 
     protected void POST(String route, RequestParams params, ResponseHandler responseHandler) {

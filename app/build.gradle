@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 6
-        versionName "0.6"
+        versionCode 7
+        versionName "0.7"
     }
     buildTypes {
         release {
@@ -29,7 +29,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository url: "file://${repo.absolutePath}"
-            pom.version = '0.6'
+            pom.version = '0.7'
             pom.groupId = 'com.easyapp.loopjhandler'
             pom.artifactId = 'loopjhandler'
         }
