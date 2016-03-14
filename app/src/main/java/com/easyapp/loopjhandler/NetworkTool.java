@@ -59,7 +59,6 @@ public class NetworkTool {
 
     private void ssl_enable() {
         try {
-            Logger.d("https");
             KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
             trustStore.load(null, null);
             MySSLSocketFactory sf = new MySSLSocketFactory(trustStore);
