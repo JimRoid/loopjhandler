@@ -4,16 +4,13 @@ package com.easyapp.loopjhandler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.MySSLSocketFactory;
 import com.loopj.android.http.RequestParams;
-import com.orhanobut.logger.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,7 +29,6 @@ public class NetworkTool {
     protected static AsyncHttpClient asyncHttpClient;
     protected boolean isShowLog = true;
     protected String baseUrl = "";
-    private AlertDialog alertDialog;
 
     static {
         asyncHttpClient = new AsyncHttpClient();
@@ -70,135 +66,84 @@ public class NetworkTool {
         }
     }
 
-    public void setDialog(AlertDialog alertDialog) {
-        this.alertDialog = alertDialog;
-    }
-
-
-    public void GetRandomChinese(int limit, int n, ResponseHandler responseHandler) {
-        String route = "http://more.handlino.com/sentences.json?limit=" + limit + "&n=" + n;
-        GET(route, responseHandler);
-    }
-
-    protected void removeAllHeaders() {
+    public void removeAllHeaders() {
         asyncHttpClient.removeAllHeaders();
     }
 
-    protected void removeHeaders(String header) {
+    public void removeHeaders(String header) {
         asyncHttpClient.removeHeader(header);
     }
 
-    protected void addHeader(String header, String value) {
+    public void addHeader(String header, String value) {
         asyncHttpClient.addHeader(header, value);
     }
 
-    protected void GET(String route, RequestParams params, ResponseHandler responseHandler) {
-        if (!isNetworkConnected(context)) {
-            responseHandler.NoNetwork();
-            showNetworkCheck();
-            return;
-        }
-
-        if (!route.startsWith("http"))
+    public void GET(String route, RequestParams params, ResponseHandler responseHandler) {
+        if (!route.startsWith("http")) {
             route = baseUrl + route;
+        }
 
         Logger("route" + route);
         Logger("params: " + params);
-        asyncHttpClient.get(context, route, params, Default_jsonHttpResponseHandler(responseHandler));
+        asyncHttpClient.get(context, route, params, DefaultJsonHttpResponseHandler(responseHandler));
     }
 
-    protected void GET(String route, ResponseHandler responseHandler) {
-        if (!isNetworkConnected(context)) {
-            responseHandler.NoNetwork();
-            showNetworkCheck();
-            return;
-        }
-
-        if (!route.startsWith("http"))
+    public void GET(String route, ResponseHandler responseHandler) {
+        if (!route.startsWith("http")) {
             route = baseUrl + route;
+        }
 
         Logger("route: " + route);
-        asyncHttpClient.get(context, route, Default_jsonHttpResponseHandler(responseHandler));
+        asyncHttpClient.get(context, route, DefaultJsonHttpResponseHandler(responseHandler));
     }
 
-    protected void GET(String route, HttpEntity httpEntity, ResponseHandler responseHandler) {
-        if (!isNetworkConnected(context)) {
-            responseHandler.NoNetwork();
-            showNetworkCheck();
-            return;
-        }
-
-        if (!route.startsWith("http"))
+    public void GET(String route, HttpEntity httpEntity, ResponseHandler responseHandler) {
+        if (!route.startsWith("http")) {
             route = baseUrl + route;
+        }
 
         Logger("route: " + route);
         String content_type = "text/plain charset=utf-8";
         asyncHttpClient.get(context, route, httpEntity, content_type, DefaultHttpResponseHandler(responseHandler));
     }
 
-    protected void POST(String route, RequestParams params, ResponseHandler responseHandler) {
-        POST(route, params, false, responseHandler);
-    }
 
-    protected void POST(String route, RequestParams params, boolean isLogin, ResponseHandler responseHandler) {
-        if (!isNetworkConnected(context)) {
-            responseHandler.NoNetwork();
-            showNetworkCheck();
-            return;
-        }
-
-        if (!route.startsWith("http"))
+    public void POST(String route, RequestParams params, ResponseHandler responseHandler) {
+        if (!route.startsWith("http")) {
             route = baseUrl + route;
+        }
 
         Logger("route: " + route);
         Logger("params: " + params);
-        asyncHttpClient.post(context, route, params, Default_jsonHttpResponseHandler(responseHandler));
+        asyncHttpClient.post(context, route, params, DefaultJsonHttpResponseHandler(responseHandler));
     }
 
-    protected void POST(String route, StringEntity stringEntity, ResponseHandler responseHandler) {
+    public void POST(String route, StringEntity stringEntity, ResponseHandler responseHandler) {
         String content_type = "text/plain charset=utf-8";
         POST(route, stringEntity, content_type, responseHandler);
     }
 
-    protected void POST(String route, StringEntity stringEntity, String content_type, ResponseHandler responseHandler) {
-        if (!isNetworkConnected(context)) {
-            responseHandler.NoNetwork();
-            showNetworkCheck();
-            return;
-        }
-
-        if (!route.startsWith("http"))
+    public void POST(String route, StringEntity stringEntity, String content_type, ResponseHandler responseHandler) {
+        if (!route.startsWith("http")) {
             route = baseUrl + route;
-
+        }
 
         Logger("route: " + route);
         asyncHttpClient.post(context, route, stringEntity, content_type, DefaultHttpResponseHandler(responseHandler));
     }
 
-    protected void DELETE(String route, ResponseHandler responseHandler) {
-        if (!isNetworkConnected(context)) {
-            responseHandler.NoNetwork();
-            showNetworkCheck();
-            return;
-        }
-
-        if (!route.startsWith("http"))
+    public void DELETE(String route, ResponseHandler responseHandler) {
+        if (!route.startsWith("http")) {
             route = baseUrl + route;
-
+        }
         Logger("route: " + route);
         asyncHttpClient.delete(context, route, DefaultHttpResponseHandler(responseHandler));
     }
 
-    protected void PUT(String route, RequestParams params, ResponseHandler responseHandler) {
-        if (!isNetworkConnected(context)) {
-            responseHandler.NoNetwork();
-            showNetworkCheck();
-            return;
-        }
-
-        if (!route.startsWith("http"))
+    public void PUT(String route, RequestParams params, ResponseHandler responseHandler) {
+        if (!route.startsWith("http")) {
             route = baseUrl + route;
-
+        }
         Logger("route: " + route);
         Logger("params: " + params);
         asyncHttpClient.put(context, route, params, DefaultHttpResponseHandler(responseHandler));
@@ -226,7 +171,7 @@ public class NetworkTool {
         };
     }
 
-    protected JsonHttpResponseHandler Default_jsonHttpResponseHandler(final ResponseHandler responseHandler) {
+    protected JsonHttpResponseHandler DefaultJsonHttpResponseHandler(final ResponseHandler responseHandler) {
         return new JsonHttpResponseHandler() {
 
             @Override
@@ -265,64 +210,9 @@ public class NetworkTool {
 
     protected void Logger(String message) {
         if (isShowLog) {
-            Logger.d(message);
+            Log.d("log", message);
         }
     }
 
-    protected void showNetworkCheck() {
-        if (alertDialog != null) {
-            if (!alertDialog.isShowing()) {
-                alertDialog.show();
-            }
-        }
-    }
 
-    public boolean isWifi() {
-        //WIFI
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifiNetwork = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (wifiNetwork != null && wifiNetwork.isConnected()) {
-            return true;
-        }
-
-
-        return false;
-    }
-
-    public boolean isMobile() {
-        //MOBILE
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mobileNetwork = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        if (mobileNetwork != null && mobileNetwork.isConnected()) {
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean isNetworkConnected(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo network = cm.getActiveNetworkInfo();
-
-        if (network == null || !network.isConnected()) {
-            return false;
-        } else {
-            return network.isAvailable();
-        }
-    }
-
-    public static void support_check_network_with_dialog(Activity activity, final Dialog_call_cancel dialog_call_cancel) {
-        if (!isNetworkConnected(activity)) {
-            new AlertDialog.Builder(activity).setTitle(R.string.hint_network_title).setMessage(R.string.hint_network_error).setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    dialog_call_cancel.onDismiss();
-                }
-            }).show();
-        }
-    }
-
-    public interface Dialog_call_cancel {
-        void onDismiss();
-    }
 }
